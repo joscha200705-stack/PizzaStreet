@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido #{{ pedido.id }} - Pizza Street</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--red:#D62828;--red-dark:#9B1B1B;--red-light:#F44336;--gray-900:#111111;--gray-800:#1C1C1C;--gray-700:#2A2A2A;--gray-600:#3D3D3D;--gray-400:#888888;--gray-200:#D0D0D0;--white:#F5F5F5;--gold:#F5A623}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{background:var(--gray-900);color:var(--white);font-family:'Lato',sans-serif;min-height:100vh;padding:2rem 1rem}
+        .card{background:var(--gray-800);border:1px solid var(--gray-600);border-top:3px solid var(--red);border-radius:10px;padding:2rem;max-width:640px;margin:0 auto}
+        .title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:4px;color:var(--red-light);margin-bottom:1.5rem}
+        .info-row{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--gray-700);font-size:0.9rem}
+        .info-row:last-child{border-bottom:none}
+        .info-label{color:var(--gray-400);font-family:'Oswald',sans-serif;font-size:0.8rem;letter-spacing:1px;text-transform:uppercase}
+        .info-val{color:var(--white);font-weight:600}
+        .lineas-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:2px;color:var(--red-light);margin:1.5rem 0 0.8rem}
+        .linea{display:flex;justify-content:space-between;align-items:center;padding:0.6rem 0.8rem;background:var(--gray-700);border-radius:6px;margin-bottom:0.4rem}
+        .linea-nom{font-family:'Oswald',sans-serif;font-size:0.9rem;font-weight:600}
+        .linea-ing{font-size:0.75rem;color:var(--gray-400);margin-top:0.1rem}
+        .linea-precio{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--red-light)}
+        .total-box{display:flex;justify-content:space-between;margin-top:1.2rem;padding-top:1rem;border-top:2px solid var(--red)}
+        .total-label{font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:1px;color:var(--gray-200)}
+        .total-val{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--red-light)}
+        .btn-back{display:inline-block;background:transparent;color:var(--gray-200);border:1px solid var(--gray-600);padding:0.5rem 1.2rem;border-radius:6px;font-family:'Oswald',sans-serif;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none;margin-top:1.5rem;transition:all 0.2s}
+        .btn-back:hover{border-color:var(--red);color:var(--white)}
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="title">📋 Pedido #{{ pedido.id }}</div>
+
+    <div class="info-row">
+        <span class="info-label">Cliente</span>
+        <span class="info-val">{{ pedido.nombre }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Teléfono</span>
+        <span class="info-val">{{ pedido.telefono }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Fecha</span>
+        <span class="info-val">{{ pedido.fecha }}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Tipo</span>
+        <span class="info-val">{{ '🛵 Domicilio' if pedido.tipo == 'domicilio' else '🏪 Recogida en local' }}</span>
+    </div>
+    {% if pedido.zona %}
+    <div class="info-row">
+        <span class="info-label">Zona</span>
+        <span class="info-val">{{ pedido.zona }}</span>
+    </div>
+    {% endif %}
+    {% if pedido.notas %}
+    <div class="info-row">
+        <span class="info-label">Notas</span>
+        <span class="info-val">{{ pedido.notas }}</span>
+    </div>
+    {% endif %}
+    <div class="info-row">
+        <span class="info-label">Estado</span>
+        <span class="info-val">{{ pedido.estado }}</span>
+    </div>
+
+    <div class="lineas-title">Productos</div>
+    {% for l in lineas %}
+    <div class="linea">
+        <div>
+            <div class="linea-nom">{{ l.cantidad }}x {{ l.nombre }}</div>
+            {% if l.ingredientes %}<div class="linea-ing">{{ l.ingredientes }}</div>{% endif %}
+        </div>
+        <div class="linea-precio">{{ "%.2f"|format(l.precio * l.cantidad) }}€</div>
+    </div>
+    {% endfor %}
+
+    <div class="total-box">
+        <span class="total-label">Total</span>
+        <span class="total-val">{{ "%.2f"|format(pedido.total) }}€</span>
+    </div>
+
+    <a href="/admin/pedidos" class="btn-back">← Volver a pedidos</a>
+</div>
+</body>
+</html>

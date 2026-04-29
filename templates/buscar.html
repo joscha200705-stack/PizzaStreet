@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar - Pizza Street</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root{--red:#D62828;--red-dark:#9B1B1B;--red-light:#F44336;--gray-900:#111111;--gray-800:#1C1C1C;--gray-700:#2A2A2A;--gray-600:#3D3D3D;--gray-400:#888888;--gray-200:#D0D0D0;--white:#F5F5F5;--gold:#F5A623}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{background:var(--gray-900);color:var(--white);font-family:'Lato',sans-serif;min-height:100vh}
+        .topbar{background:var(--gray-800);border-bottom:2px solid var(--red);padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
+        .topbar-logo{height:40px;width:40px;border-radius:50%;object-fit:cover;border:2px solid var(--red)}
+        .topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:var(--white);flex:1}
+        .topbar-title span{color:var(--red-light)}
+        .btn-outline{background:transparent;color:var(--gray-200);border:1px solid var(--gray-600);padding:0.45rem 1.2rem;border-radius:6px;font-family:'Oswald',sans-serif;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none;transition:all 0.2s;display:inline-block}
+        .btn-outline:hover{border-color:var(--red);color:var(--white)}
+        .btn-red{background:var(--red);color:white;border:none;padding:0.55rem 1.5rem;border-radius:6px;font-family:'Oswald',sans-serif;font-size:0.9rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background 0.2s}
+        .btn-red:hover{background:var(--red-dark)}
+        .page{padding:2rem 1.5rem}
+        .search-card{background:var(--gray-800);border:1px solid var(--gray-600);border-top:3px solid var(--red);border-radius:10px;padding:1.5rem;margin-bottom:2rem}
+        .search-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:3px;color:var(--red-light);margin-bottom:1.2rem}
+        .form-label{color:var(--gray-200);font-family:'Oswald',sans-serif;font-size:0.82rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem;display:block}
+        .form-control,.form-select{background:var(--gray-700)!important;border:1px solid var(--gray-600)!important;color:var(--white)!important;border-radius:6px;font-size:0.9rem;padding:0.5rem 0.9rem;width:100%}
+        .form-control:focus,.form-select:focus{border-color:var(--red)!important;box-shadow:0 0 0 2px rgba(214,40,40,0.25)!important;outline:none}
+        .form-control::placeholder{color:var(--gray-400)!important}
+        .form-select option{background:var(--gray-700)}
+        .results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem}
+        .results-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:var(--white)}
+        .results-count{font-family:'Oswald',sans-serif;font-size:0.9rem;color:var(--gray-400)}
+        .results-count span{color:var(--red-light);font-size:1.1rem}
+        .table-wrap{background:var(--gray-800);border-radius:8px;border:1px solid var(--gray-600);overflow:auto}
+        table{width:100%;border-collapse:collapse;font-size:0.88rem}
+        thead th{background:var(--gray-700);color:var(--red-light);font-family:'Oswald',sans-serif;font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.7rem 1rem;text-align:left;border-bottom:2px solid var(--red)}
+        tbody td{padding:0.7rem 1rem;border-bottom:1px solid var(--gray-700);vertical-align:middle;color:var(--gray-200)}
+        tbody tr:last-child td{border-bottom:none}
+        tbody tr:hover td{background:var(--gray-700)}
+        .cat-badge{background:var(--red-dark);color:var(--white);padding:0.15rem 0.6rem;border-radius:999px;font-size:0.72rem;font-family:'Oswald',sans-serif;white-space:nowrap}
+        .precio-col{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--red-light)}
+        .no-results{text-align:center;padding:3rem;color:var(--gray-400)}
+        .no-results-icon{font-size:3rem;margin-bottom:1rem}
+        .no-results-text{font-family:'Oswald',sans-serif;font-size:1.1rem;letter-spacing:1px}
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <img src="https://i.imgur.com/AXeWldP.jpg" alt="Logo" class="topbar-logo">
+    <span class="topbar-title">PIZZA <span>&</span> GRILL STREET</span>
+    <div class="d-flex gap-2">
+        <a href="/admin" class="btn-outline">⚙️ Admin</a>
+        <a href="/" class="btn-outline">← Carta</a>
+    </div>
+</div>
+
+<div class="page">
+    <div class="search-card">
+        <div class="search-title">🔍 Buscar Productos</div>
+        <form method="GET" action="/buscar">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Nombre del producto</label>
+                    <input type="text" name="nombre" class="form-control"
+                           placeholder="Ej: Margherita, Burger..."
+                           value="{{ request.args.get('nombre', '') }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Categoría</label>
+                    <select name="categoria_id" class="form-select">
+                        <option value="">Todas</option>
+                        {% for c in categorias %}
+                        <option value="{{ c.id }}"
+                            {{ 'selected' if request.args.get('categoria_id') == c.id|string else '' }}>
+                            {{ c.nombre }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Precio máximo (€)</label>
+                    <input type="number" name="precio_max" class="form-control"
+                           step="0.50" min="0" placeholder="15.00"
+                           value="{{ request.args.get('precio_max', '') }}">
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button type="submit" class="btn-red w-100">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if request.args %}
+    <div class="results-header">
+        <span class="results-title">Resultados</span>
+        <span class="results-count"><span>{{ total }}</span> productos encontrados</span>
+    </div>
+
+    {% if resultados %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Categoría</th>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in resultados %}
+                <tr>
+                    <td><span class="cat-badge">{{ p.categoria }}</span></td>
+                    <td style="color:var(--gray-400);font-size:0.8rem">{{ p.codigo }}</td>
+                    <td><strong>{{ p.nombre }}</strong></td>
+                    <td class="precio-col">{{ "%.2f"|format(p.precio) }}€</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-results">
+        <div class="no-results-icon">🍕</div>
+        <div class="no-results-text">No se encontraron productos con esos filtros</div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+</div>
+
+</body>
+</html>

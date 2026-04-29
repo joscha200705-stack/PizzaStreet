@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Pizza Street</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root{--red:#D62828;--red-dark:#9B1B1B;--red-light:#F44336;--gray-900:#111111;--gray-800:#1C1C1C;--gray-700:#2A2A2A;--gray-600:#3D3D3D;--gray-400:#888888;--gray-200:#D0D0D0;--white:#F5F5F5;--gold:#F5A623}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{background:var(--gray-900);color:var(--white);font-family:'Lato',sans-serif;font-size:14px}
+        .topbar{background:var(--gray-800);border-bottom:2px solid var(--red);padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
+        .topbar-logo{height:40px;width:40px;border-radius:50%;object-fit:cover;border:2px solid var(--red)}
+        .topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:var(--white);flex:1}
+        .topbar-title span{color:var(--red-light)}
+        .btn-red{background:var(--red);color:white;border:none;padding:0.45rem 1.2rem;border-radius:6px;font-family:'Oswald',sans-serif;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:background 0.2s;display:inline-block}
+        .btn-red:hover{background:var(--red-dark);color:white}
+        .btn-outline{background:transparent;color:var(--gray-200);border:1px solid var(--gray-600);padding:0.45rem 1.2rem;border-radius:6px;font-family:'Oswald',sans-serif;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:all 0.2s;display:inline-block}
+        .btn-outline:hover{border-color:var(--red);color:var(--white)}
+        .btn-edit{background:transparent;color:var(--gray-200);border:1px solid var(--gray-600);padding:0.25rem 0.7rem;border-radius:4px;font-size:0.78rem;text-decoration:none;font-family:'Oswald',sans-serif;transition:all 0.2s}
+        .btn-edit:hover{border-color:var(--red-light);color:var(--white)}
+        .btn-del{background:#5a0000;color:var(--gray-200);border:none;padding:0.25rem 0.7rem;border-radius:4px;font-size:0.78rem;text-decoration:none;font-family:'Oswald',sans-serif;cursor:pointer;transition:background 0.2s}
+        .btn-del:hover{background:var(--red);color:white}
+        .page{padding:2rem 1.5rem}
+        .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+        .page-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:3px;color:var(--red-light)}
+        .filtro{background:var(--gray-700);color:var(--white);border:1px solid var(--gray-600);border-radius:6px;padding:0.35rem 0.8rem;font-family:'Oswald',sans-serif;font-size:0.85rem}
+        .stats{display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap}
+        .stat-card{background:var(--gray-800);border:1px solid var(--gray-600);border-left:3px solid var(--red);border-radius:8px;padding:0.8rem 1.2rem;min-width:120px}
+        .stat-num{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--red-light);line-height:1}
+        .stat-label{font-size:0.75rem;color:var(--gray-400);text-transform:uppercase;letter-spacing:1px}
+        .table-wrap{background:var(--gray-800);border-radius:8px;border:1px solid var(--gray-600);overflow:auto}
+        table{width:100%;border-collapse:collapse;font-size:0.88rem}
+        thead th{background:var(--gray-700);color:var(--red-light);font-family:'Oswald',sans-serif;font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.7rem 1rem;text-align:left;border-bottom:2px solid var(--red)}
+        tbody td{padding:0.7rem 1rem;border-bottom:1px solid var(--gray-700);vertical-align:middle;color:var(--gray-200)}
+        tbody tr:last-child td{border-bottom:none}
+        tbody tr:hover td{background:var(--gray-700)}
+        .cat-badge{background:var(--red-dark);color:var(--white);padding:0.15rem 0.6rem;border-radius:999px;font-size:0.72rem;font-family:'Oswald',sans-serif;letter-spacing:0.5px;white-space:nowrap}
+        .precio-col{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--red-light)}
+        .disp-on{color:#4CAF50;font-size:1rem}
+        .disp-off{color:var(--gray-400);font-size:1rem}
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <img src="https://i.imgur.com/AXeWldP.jpg" alt="Logo" class="topbar-logo">
+    <span class="topbar-title">PIZZA <span>&</span> GRILL STREET · <small style="font-size:0.9rem;letter-spacing:1px;color:var(--gray-400)">ADMINISTRACIÓN</small></span>
+    <div class="d-flex gap-2">
+        <a href="/addproducto" class="btn-red">+ Nuevo</a>
+	<a href="/admin/pedidos" class="btn-red">📋 Pedidos</a>
+        <a href="/buscar" class="btn-outline">🔍 Buscar</a>
+        <a href="/" class="btn-outline">Ver Carta</a>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-header">
+        <span class="page-title">Productos</span>
+        <select class="filtro" id="filtrocat" onchange="filtrar()">
+            <option value="">Todas las categorías</option>
+            {% for c in categorias %}
+            <option value="{{ c.nombre }}">{{ c.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-num">{{ productos|length }}</div>
+            <div class="stat-label">Total productos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">{{ categorias|length }}</div>
+            <div class="stat-label">Categorías</div>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table id="tablaProductos">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Categoría</th>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Disponible</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in productos %}
+                <tr data-cat="{{ p.categoria }}">
+                    <td style="color:var(--gray-400)">{{ p.id }}</td>
+                    <td><span class="cat-badge">{{ p.categoria }}</span></td>
+                    <td style="color:var(--gray-400);font-size:0.8rem">{{ p.codigo }}</td>
+                    <td><strong>{{ p.nombre }}</strong></td>
+                    <td class="precio-col">{{ "%.2f"|format(p.precio) }}€</td>
+                    <td>
+                        {% if p.disponible %}
+                        <span class="disp-on">✔</span>
+                        {% else %}
+                        <span class="disp-off">✘</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a href="/editproducto/{{ p.id }}" class="btn-edit">✏️ Editar</a>
+                            <a href="/deleteproducto/{{ p.id }}" class="btn-del"
+                               onclick="return confirm('¿Eliminar {{ p.nombre }}?')">🗑️</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function filtrar(){
+    const val=document.getElementById('filtrocat').value.toLowerCase();
+    document.querySelectorAll('#tablaProductos tbody tr').forEach(tr=>{
+        const cat=tr.dataset.cat?.toLowerCase()||'';
+        tr.style.display=(!val||cat===val)?'':'none';
+    });
+}
+</script>
+</body>
+</html>

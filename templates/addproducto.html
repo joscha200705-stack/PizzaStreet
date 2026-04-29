@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producto - Pizza Street</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root{--red:#D62828;--red-dark:#9B1B1B;--red-light:#F44336;--gray-900:#111111;--gray-800:#1C1C1C;--gray-700:#2A2A2A;--gray-600:#3D3D3D;--gray-400:#888888;--gray-200:#D0D0D0;--white:#F5F5F5}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{background:var(--gray-900);color:var(--white);font-family:'Lato',sans-serif;min-height:100vh}
+        .topbar{background:var(--gray-800);border-bottom:2px solid var(--red);padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem}
+        .topbar-logo{height:40px;width:40px;border-radius:50%;object-fit:cover;border:2px solid var(--red)}
+        .topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:var(--white);flex:1}
+        .topbar-title span{color:var(--red-light)}
+        .btn-outline{background:transparent;color:var(--gray-200);border:1px solid var(--gray-600);padding:0.45rem 1.2rem;border-radius:6px;font-family:'Oswald',sans-serif;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none;transition:all 0.2s;display:inline-block}
+        .btn-outline:hover{border-color:var(--red);color:var(--white)}
+        .page{padding:2rem 1.5rem;display:flex;justify-content:center}
+        .form-card{background:var(--gray-800);border:1px solid var(--gray-600);border-top:3px solid var(--red);border-radius:10px;padding:2rem;width:100%;max-width:620px}
+        .form-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:3px;color:var(--red-light);margin-bottom:1.5rem}
+        .form-label{color:var(--gray-200);font-family:'Oswald',sans-serif;font-size:0.82rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.3rem;display:block}
+        .form-control,.form-select{background:var(--gray-700)!important;border:1px solid var(--gray-600)!important;color:var(--white)!important;border-radius:6px;font-size:0.9rem;padding:0.55rem 0.9rem;width:100%}
+        .form-control:focus,.form-select:focus{border-color:var(--red)!important;box-shadow:0 0 0 2px rgba(214,40,40,0.25)!important;outline:none}
+        .form-control::placeholder{color:var(--gray-400)!important}
+        .form-select option{background:var(--gray-700)}
+        .btn-red{background:var(--red);color:white;border:none;padding:0.6rem 1.8rem;border-radius:6px;font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background 0.2s;text-decoration:none;display:inline-block}
+        .btn-red:hover{background:var(--red-dark);color:white}
+        .check-label{display:flex;align-items:center;gap:0.6rem;color:var(--gray-200);font-family:'Oswald',sans-serif;font-size:0.9rem;cursor:pointer}
+        .form-check-input{width:1.1rem;height:1.1rem;accent-color:var(--red)}
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <img src="https://i.imgur.com/AXeWldP.jpg" alt="Logo" class="topbar-logo">
+    <span class="topbar-title">PIZZA <span>&</span> GRILL STREET</span>
+    <a href="/admin" class="btn-outline">← Volver</a>
+</div>
+
+<div class="page">
+    <div class="form-card">
+        <div class="form-title">
+            {{ '✏️ EDITAR PRODUCTO' if producto.get('id') else '➕ NUEVO PRODUCTO' }}
+        </div>
+
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Categoría *</label>
+                <select name="categoria_id" class="form-select" required>
+                    {% for c in categorias %}
+                    <option value="{{ c.id }}" {{ 'selected' if producto.get('categoria_id') == c.id else '' }}>
+                        {{ c.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-4">
+                    <label class="form-label">Código</label>
+                    <input type="text" name="codigo" class="form-control"
+                           placeholder="1.001" value="{{ producto.get('codigo', '') }}">
+                </div>
+                <div class="col-8">
+                    <label class="form-label">Nombre *</label>
+                    <input type="text" name="nombre" class="form-control"
+                           placeholder="Ej: Margherita" value="{{ producto.get('nombre', '') }}" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Precio (€) *</label>
+                <input type="number" name="precio" class="form-control"
+                       step="0.01" min="0" placeholder="8.50"
+                       value="{{ producto.get('precio', '') }}" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="check-label">
+                    <input type="checkbox" name="disponible" class="form-check-input"
+                           {{ 'checked' if producto.get('disponible', 1) else '' }}>
+                    Producto disponible
+                </label>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn-red">
+                    {{ '💾 Guardar cambios' if producto.get('id') else '✅ Añadir producto' }}
+                </button>
+                <a href="/admin" class="btn-outline">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

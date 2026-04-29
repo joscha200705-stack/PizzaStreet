@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos - Pizza Street</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root{--red:#D62828;--red-dark:#9B1B1B;--red-light:#F44336;--gray-900:#111111;--gray-800:#1C1C1C;--gray-700:#2A2A2A;--gray-600:#3D3D3D;--gray-400:#888888;--gray-200:#D0D0D0;--white:#F5F5F5;--gold:#F5A623}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{background:var(--gray-900);color:var(--white);font-family:'Lato',sans-serif}
+        .topbar{background:var(--gray-800);border-bottom:2px solid var(--red);padding:0.6rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:100}
+        .topbar-logo{height:40px;width:40px;border-radius:50%;object-fit:cover;border:2px solid var(--red)}
+        .topbar-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:var(--white);flex:1}
+        .topbar-title span{color:var(--red-light)}
+        .btn-outline{background:transparent;color:var(--gray-200);border:1px solid var(--gray-600);padding:0.45rem 1.2rem;border-radius:6px;font-family:'Oswald',sans-serif;font-size:0.85rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none;transition:all 0.2s;display:inline-block}
+        .btn-outline:hover{border-color:var(--red);color:var(--white)}
+        .page{padding:2rem 1.5rem}
+        .page-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:3px;color:var(--red-light);margin-bottom:1.5rem}
+        .table-wrap{background:var(--gray-800);border-radius:8px;border:1px solid var(--gray-600);overflow:auto}
+        table{width:100%;border-collapse:collapse;font-size:0.88rem}
+        thead th{background:var(--gray-700);color:var(--red-light);font-family:'Oswald',sans-serif;font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;padding:0.7rem 1rem;text-align:left;border-bottom:2px solid var(--red)}
+        tbody td{padding:0.7rem 1rem;border-bottom:1px solid var(--gray-700);vertical-align:middle;color:var(--gray-200)}
+        tbody tr:last-child td{border-bottom:none}
+        tbody tr:hover td{background:var(--gray-700)}
+        .precio-col{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--red-light)}
+        .badge-tipo{padding:0.2rem 0.7rem;border-radius:999px;font-size:0.75rem;font-family:'Oswald',sans-serif}
+        .badge-local{background:rgba(76,175,80,0.2);color:#4CAF50;border:1px solid #4CAF50}
+        .badge-domicilio{background:rgba(245,166,35,0.2);color:var(--gold);border:1px solid var(--gold)}
+        .estado-select{background:var(--gray-700);color:var(--white);border:1px solid var(--gray-600);border-radius:4px;padding:0.2rem 0.5rem;font-size:0.8rem;cursor:pointer}
+        .no-pedidos{text-align:center;padding:3rem;color:var(--gray-400);font-family:'Oswald',sans-serif;font-size:1.1rem;letter-spacing:1px}
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <img src="https://i.imgur.com/AXeWldP.jpg" alt="Logo" class="topbar-logo">
+    <span class="topbar-title">PIZZA <span>&</span> GRILL STREET · <small style="font-size:0.9rem;color:var(--gray-400)">PEDIDOS</small></span>
+    <div class="d-flex gap-2">
+        <a href="/admin" class="btn-outline">⚙️ Productos</a>
+        <a href="/" class="btn-outline">Ver Carta</a>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-title">📋 Pedidos Recibidos</div>
+
+    {% if pedidos %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Teléfono</th>
+                    <th>Tipo</th>
+                    <th>Zona</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in pedidos %}
+                <tr>
+                   <td><a href="/admin/pedido/{{ p.id }}" style="color:var(--red-light);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;text-decoration:none">#{{ p.id }}</a></td>
+                    <td style="font-size:0.8rem">{{ p.fecha }}</td>
+                    <td><strong>{{ p.nombre }}</strong></td>
+                    <td>{{ p.telefono }}</td>
+                    <td>
+                        {% if p.tipo == 'domicilio' %}
+                        <span class="badge-tipo badge-domicilio">🛵 Domicilio</span>
+                        {% else %}
+                        <span class="badge-tipo badge-local">🏪 Local</span>
+                        {% endif %}
+                    </td>
+                    <td style="color:var(--gray-400)">{{ p.zona or '—' }}</td>
+                    <td class="precio-col">{{ "%.2f"|format(p.total) }}€</td>
+                    <td>
+                        <select class="estado-select" onchange="cambiarEstado({{ p.id }}, this.value)">
+                            <option value="pendiente" {{ 'selected' if p.estado == 'pendiente' }}>⏳ Pendiente</option>
+                            <option value="preparando" {{ 'selected' if p.estado == 'preparando' }}>👨‍🍳 Preparando</option>
+                            <option value="listo" {{ 'selected' if p.estado == 'listo' }}>✅ Listo</option>
+                            <option value="entregado" {{ 'selected' if p.estado == 'entregado' }}>📦 Entregado</option>
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-pedidos">No hay pedidos todavía</div>
+    {% endif %}
+</div>
+
+<script>
+function cambiarEstado(id, estado) {
+    window.location.href = '/pedido_estado/' + id + '/' + estado;
+}
+</script>
+</body>
+</html>
